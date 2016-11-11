@@ -31,8 +31,8 @@ ZEPHIR_INIT_CLASS(Tools_ShortUrl) {
 PHP_METHOD(Tools_ShortUrl, generate) {
 
 	zephir_fcall_cache_entry *_3 = NULL;
-	int max_char, ZEPHIR_LAST_CALL_STATUS, blockNum, output_count, char_count = 0, index = 0, _12$$5;
-	zval *url_param = NULL, *max_char_param = NULL, base, _0, output, hex, subHex, chars, _1$$3, _2$$3, _4$$3, _5$$3, _6$$3, _7$$3, _8$$5, _9$$5, _10$$5, _11$$5;
+	int max_char, ZEPHIR_LAST_CALL_STATUS, blockNum, output_count, char_count = 0, max_index, index = 0, _9$$5;
+	zval *url_param = NULL, *max_char_param = NULL, base, _0, output, hex, subHex, chars, _1$$3, _2$$3, _4$$3, _5$$3, _6$$3, _7$$3, _8$$5;
 	zval url;
 	ZEPHIR_INIT_THIS();
 
@@ -50,9 +50,6 @@ PHP_METHOD(Tools_ShortUrl, generate) {
 	ZVAL_UNDEF(&_6$$3);
 	ZVAL_UNDEF(&_7$$3);
 	ZVAL_UNDEF(&_8$$5);
-	ZVAL_UNDEF(&_9$$5);
-	ZVAL_UNDEF(&_10$$5);
-	ZVAL_UNDEF(&_11$$5);
 
 	ZEPHIR_MM_GROW();
 	zephir_fetch_params(1, 1, 1, &url_param, &max_char_param);
@@ -260,6 +257,7 @@ PHP_METHOD(Tools_ShortUrl, generate) {
 	zephir_md5(&_0, &url);
 	ZEPHIR_CPY_WRT(&hex, &_0);
 	output_count = 0;
+	max_index = 61;
 	while (1) {
 		if (output_count == blockNum) {
 			break;
@@ -285,21 +283,15 @@ PHP_METHOD(Tools_ShortUrl, generate) {
 			if (char_count == max_char) {
 				break;
 			}
-			ZEPHIR_INIT_NVAR(&_8$$5);
-			ZVAL_STRING(&_8$$5, "0x0000003D");
-			ZEPHIR_CALL_FUNCTION(&_9$$5, "hexdec", &_3, 1, &_8$$5);
-			zephir_check_call_status();
-			ZEPHIR_INIT_LNVAR(_10$$5);
-			zephir_bitwise_and_function(&_10$$5, &_9$$5, &subHex TSRMLS_CC);
-			index = zephir_get_numberval(&_10$$5);
-			zephir_array_fetch_long(&_11$$5, &base, index, PH_NOISY | PH_READONLY, "tools/shorturl.zep", 28 TSRMLS_CC);
-			zephir_concat_self(&chars, &_11$$5 TSRMLS_CC);
-			_12$$5 = ((int) (zephir_get_numberval(&subHex)) >> 5);
+			index = (max_index & (int) (zephir_get_numberval(&subHex)));
+			zephir_array_fetch_long(&_8$$5, &base, index, PH_NOISY | PH_READONLY, "tools/shorturl.zep", 29 TSRMLS_CC);
+			zephir_concat_self(&chars, &_8$$5 TSRMLS_CC);
+			_9$$5 = ((int) (zephir_get_numberval(&subHex)) >> 5);
 			ZEPHIR_INIT_NVAR(&subHex);
-			ZVAL_LONG(&subHex, _12$$5);
+			ZVAL_LONG(&subHex, _9$$5);
 			char_count += 1;
 		}
-		zephir_array_append(&output, &chars, PH_SEPARATE, "tools/shorturl.zep", 30);
+		zephir_array_append(&output, &chars, PH_SEPARATE, "tools/shorturl.zep", 31);
 		output_count += 1;
 	}
 	RETURN_CCTOR(output);
