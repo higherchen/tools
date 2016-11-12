@@ -25,7 +25,7 @@ class ShortUrl
             let subHex = hexdec("0x3FFFFFFF") & hexdec("0x".substr(hex, output_count * 8, 8));
             loop {
                 if char_count == max_char {break;}
-                let index = max_index & subHex;
+                let index = subHex & max_index;
                 let chars .= base[index], subHex = subHex >> 5, char_count += 1;
             }
             let output[] = chars, output_count += 1;
