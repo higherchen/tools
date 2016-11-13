@@ -15,14 +15,14 @@ class ShortUrl
         ];
         var output = [], blockNum = 4, hex = url->md5(), output_count = 0;
         var char_count, subHex, chars;
-	// max_index = count(base) - 1
+        // max_index = count(base) - 1
         int max_index = 61, index;
 
         loop {
             if output_count == blockNum {break;}
 
             let char_count = 0, chars = "";
-            let subHex = hexdec("0x3FFFFFFF") & hexdec("0x".substr(hex, output_count * 8, 8));
+            let subHex = hexdec("0x".substr(hex, output_count * 8, 8)) & hexdec("0x3FFFFFFF");
             loop {
                 if char_count == max_char {break;}
                 let index = subHex & max_index;

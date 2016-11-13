@@ -15,9 +15,9 @@
 #include "kernel/memory.h"
 #include "kernel/array.h"
 #include "kernel/string.h"
-#include "kernel/fcall.h"
 #include "kernel/concat.h"
 #include "kernel/operators.h"
+#include "kernel/fcall.h"
 
 
 ZEPHIR_INIT_CLASS(Tools_ShortUrl) {
@@ -30,9 +30,9 @@ ZEPHIR_INIT_CLASS(Tools_ShortUrl) {
 
 PHP_METHOD(Tools_ShortUrl, generate) {
 
-	zephir_fcall_cache_entry *_3 = NULL;
-	int max_char, ZEPHIR_LAST_CALL_STATUS, blockNum, output_count, char_count = 0, max_index, index = 0, _9$$5;
-	zval *url_param = NULL, *max_char_param = NULL, base, _0, output, hex, subHex, chars, _1$$3, _2$$3, _4$$3, _5$$3, _6$$3, _7$$3, _8$$5;
+	zephir_fcall_cache_entry *_6 = NULL;
+	int max_char, ZEPHIR_LAST_CALL_STATUS, blockNum, output_count, char_count = 0, max_index, index = 0, _10$$5;
+	zval *url_param = NULL, *max_char_param = NULL, base, _0, output, hex, subHex, chars, _1$$3, _2$$3, _3$$3, _4$$3, _5$$3, _7$$3, _8$$3, _9$$5;
 	zval url;
 	ZEPHIR_INIT_THIS();
 
@@ -45,11 +45,12 @@ PHP_METHOD(Tools_ShortUrl, generate) {
 	ZVAL_UNDEF(&chars);
 	ZVAL_UNDEF(&_1$$3);
 	ZVAL_UNDEF(&_2$$3);
+	ZVAL_UNDEF(&_3$$3);
 	ZVAL_UNDEF(&_4$$3);
 	ZVAL_UNDEF(&_5$$3);
-	ZVAL_UNDEF(&_6$$3);
 	ZVAL_UNDEF(&_7$$3);
-	ZVAL_UNDEF(&_8$$5);
+	ZVAL_UNDEF(&_8$$3);
+	ZVAL_UNDEF(&_9$$5);
 
 	ZEPHIR_MM_GROW();
 	zephir_fetch_params(1, 1, 1, &url_param, &max_char_param);
@@ -265,30 +266,30 @@ PHP_METHOD(Tools_ShortUrl, generate) {
 		char_count = 0;
 		ZEPHIR_INIT_NVAR(&chars);
 		ZVAL_STRING(&chars, "");
-		ZEPHIR_INIT_NVAR(&_1$$3);
-		ZVAL_STRING(&_1$$3, "0x3FFFFFFF");
-		ZEPHIR_CALL_FUNCTION(&_2$$3, "hexdec", &_3, 1, &_1$$3);
+		ZVAL_LONG(&_1$$3, (output_count * 8));
+		ZVAL_LONG(&_2$$3, 8);
+		ZEPHIR_INIT_NVAR(&_3$$3);
+		zephir_substr(&_3$$3, &hex, zephir_get_intval(&_1$$3), 8 , 0);
+		ZEPHIR_INIT_LNVAR(_4$$3);
+		ZEPHIR_CONCAT_SV(&_4$$3, "0x", &_3$$3);
+		ZEPHIR_CALL_FUNCTION(&_5$$3, "hexdec", &_6, 1, &_4$$3);
 		zephir_check_call_status();
-		ZVAL_LONG(&_4$$3, (output_count * 8));
-		ZVAL_LONG(&_5$$3, 8);
-		ZEPHIR_INIT_NVAR(&_1$$3);
-		zephir_substr(&_1$$3, &hex, zephir_get_intval(&_4$$3), 8 , 0);
-		ZEPHIR_INIT_LNVAR(_6$$3);
-		ZEPHIR_CONCAT_SV(&_6$$3, "0x", &_1$$3);
-		ZEPHIR_CALL_FUNCTION(&_7$$3, "hexdec", &_3, 1, &_6$$3);
+		ZEPHIR_INIT_NVAR(&_7$$3);
+		ZVAL_STRING(&_7$$3, "0x3FFFFFFF");
+		ZEPHIR_CALL_FUNCTION(&_8$$3, "hexdec", &_6, 1, &_7$$3);
 		zephir_check_call_status();
 		ZEPHIR_INIT_NVAR(&subHex);
-		zephir_bitwise_and_function(&subHex, &_2$$3, &_7$$3 TSRMLS_CC);
+		zephir_bitwise_and_function(&subHex, &_5$$3, &_8$$3 TSRMLS_CC);
 		while (1) {
 			if (char_count == max_char) {
 				break;
 			}
-			index = (max_index & (int) (zephir_get_numberval(&subHex)));
-			zephir_array_fetch_long(&_8$$5, &base, index, PH_NOISY | PH_READONLY, "tools/shorturl.zep", 29 TSRMLS_CC);
-			zephir_concat_self(&chars, &_8$$5 TSRMLS_CC);
-			_9$$5 = ((int) (zephir_get_numberval(&subHex)) >> 5);
+			index = ((int) (zephir_get_numberval(&subHex)) & max_index);
+			zephir_array_fetch_long(&_9$$5, &base, index, PH_NOISY | PH_READONLY, "tools/shorturl.zep", 29 TSRMLS_CC);
+			zephir_concat_self(&chars, &_9$$5 TSRMLS_CC);
+			_10$$5 = ((int) (zephir_get_numberval(&subHex)) >> 5);
 			ZEPHIR_INIT_NVAR(&subHex);
-			ZVAL_LONG(&subHex, _9$$5);
+			ZVAL_LONG(&subHex, _10$$5);
 			char_count += 1;
 		}
 		zephir_array_append(&output, &chars, PH_SEPARATE, "tools/shorturl.zep", 31);
